@@ -149,7 +149,7 @@ var createAndUploadArtifacts = function (options, done) {
     if(options.classifier) {
         remoteArtifactName = remoteArtifactName + "-" + options.classifier;
     }
-    uploads[artifact] = groupArtifactVersionPath + '/' + remoteArtifactName + '-' + options.lastUpdated + '.' + options.packaging;
+    uploads[artifact] = groupArtifactVersionPath + '/' + remoteArtifactName + options.lastUpdated + '.' + options.packaging;
     uploads[pomDir + "/artifact." + options.packaging + ".sha1"] = groupArtifactVersionPath + '/' + remoteArtifactName + '.' + options.packaging + '.sha1';
     uploads[pomDir + "/artifact." + options.packaging + ".md5"] = groupArtifactVersionPath + '/' + remoteArtifactName + '.' + options.packaging + '.md5';
 
@@ -181,6 +181,6 @@ module.exports = function (options, cb) {
         throw {name: "IllegalArgumentException", message: "upload artifact options required."};
     }
     exec = process.env.MOCK_NEXUS ? require('./mockexec') : require('child_process').exec;
-    options.lastUpdated = options.lastUpdated ? options.lastUpdated : dateformat(new Date(), "yyyymmdd.HHMMss", true);
+    options.lastUpdated = options.lastUpdated !== undefined ? options.lastUpdated : "-" + dateformat(new Date(), "yyyymmdd.HHMMss", true);
     createAndUploadArtifacts(options, cb);
 };
